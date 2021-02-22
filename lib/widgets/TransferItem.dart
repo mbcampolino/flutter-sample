@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 
-import '../model/Transfer.dart';
+import '../model/TransactionModel.dart';
 
 class ItemTransfer extends StatelessWidget {
 
-  final Transfer transfer;
+  final TransactionModel transfer;
 
   ItemTransfer(this.transfer);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
+    Icon _icon = Icon(Icons.monetization_on);
+
+    if (transfer.type == 1) {
+      _icon = Icon(Icons.money);
+    }
     return Card(
       child: ListTile(
-        leading: Icon(Icons.monetization_on),
-        title: Text(transfer.value.toString()),
-        subtitle: Text(transfer.accountNumber.toString()),
+        leading: _icon,
+        title: Text(transfer.valueFormatted()),
+        subtitle: Text(transfer.accountFormatted()),
       ),
     );
   }

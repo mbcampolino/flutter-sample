@@ -1,16 +1,11 @@
-import 'package:bytebank/model/Transfer.dart';
+import 'package:bytebank/model/BalanceModel.dart';
+import 'package:bytebank/model/TransferListModel.dart';
+import 'package:bytebank/model/TransactionModel.dart';
 import 'package:bytebank/widgets/EditText.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class TransferForm extends StatefulWidget {
-
-  @override
-  State<StatefulWidget> createState() {
-    return TransferFormState();
-  }
-}
-
-class TransferFormState extends State<TransferForm> {
+class TransferForm extends StatelessWidget {
 
   final TextEditingController _controllerNumberAccount =
   TextEditingController();
@@ -41,10 +36,19 @@ class TransferFormState extends State<TransferForm> {
   void _createTransfer(BuildContext context) {
     double value = double.tryParse(_controllerValue.text);
     int account = int.tryParse(_controllerNumberAccount.text);
-    if (value != null && account != null) {
-      Transfer transfer = Transfer(value, account);
-      Navigator.pop(context, transfer);
+    if (_validTransfer(context, account, value)) {
+      TransactionModel transfer = TransactionModel(value, account, 0);
+     _updateList(context, transfer);
+      Navigator.pop(context);
     }
   }
+
+  _updateList(BuildContext context, TransactionModel transferModel) {
+    Provider.of<TransferListModel>(context, listen: false).add(transferModel);
+    Provider.of<BalanceModel>(context, listen: false).subtract(transferModel.value);
+  }
+
+  _validTransfer(BuildContext context, int accountNumber, double value) => (value != null && accountNumber != null &&
+      value <= Provider.of<BalanceModel>(context, listen: false).balanceValue);
 
 }

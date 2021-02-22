@@ -1,14 +1,24 @@
-import 'package:bytebank/screens/TransferList.dart';
+import 'package:bytebank/model/TransferListModel.dart';
+import 'package:bytebank/screens/Dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(ByteBankApp());
+import 'model/BalanceModel.dart';
+
+void main() => runApp(MultiProvider(
+  providers: [
+    ChangeNotifierProvider(create: (context) => BalanceModel(0)),
+    ChangeNotifierProvider(create: (context) => TransferListModel())
+  ],
+  child: ByteBankApp(),
+));
 
 class ByteBankApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: TransferList(),
+      home: Dashboard(),
       theme : ThemeData(
         primaryColor: Colors.green[900],
         accentColor: Colors.blueAccent[700],
